@@ -16,6 +16,8 @@ LOCAL_PATH := $(call my-dir)
 
 C_ROOT := $(LOCAL_PATH)
 
+TARGET_USE_ADF := false
+
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := minui_test
@@ -44,5 +46,7 @@ include $(BUILD_EXECUTABLE)
 include $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/libpng/Android.mk \
     $(LOCAL_PATH)/zlib/Android.mk \
-    $(LOCAL_PATH)/adf/Android.mk \
 
+ifeq ($(TARGET_USE_ADF),true)
+    $(LOCAL_PATH)/adf/Android.mk
+endif
