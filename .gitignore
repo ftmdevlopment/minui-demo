@@ -1,0 +1,8 @@
+obj/
+libs/
+
+*.out
+*.swp
+
+.*
+!.gitignore
