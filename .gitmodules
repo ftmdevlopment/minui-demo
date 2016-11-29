@@ -1,12 +1,12 @@
 [submodule "adf"]
-	path = adf
+	path = jni/adf
 	url = git@github.com:ftmdevlopment/adf.git
 [submodule "zlib"]
-	path = zlib
+	path = jni/zlib
 	url = git@github.com:ftmdevlopment/zlib.git
 [submodule "minui"]
-	path = minui
+	path = jni/minui
 	url = git@github.com:ftmdevlopment/minui.git
 [submodule "libpng"]
-	path = libpng
+	path = jni/libpng
 	url = git@github.com:ftmdevlopment/libpng.git
