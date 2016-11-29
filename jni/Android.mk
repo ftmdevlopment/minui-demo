@@ -17,6 +17,7 @@ LOCAL_PATH := $(call my-dir)
 C_ROOT := $(LOCAL_PATH)
 
 TARGET_USE_ADF := false
+TARGET_USE_DOUBLE_BUFFER := false
 
 include $(CLEAR_VARS)
 
