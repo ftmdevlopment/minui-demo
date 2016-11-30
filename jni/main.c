@@ -70,8 +70,44 @@ void image_test(const char* name)
 		py = g_height/2 - ih/2; if (py < 0) py = 0;
 		gr_blit(img, 0, 0, min(iw, g_width), min(ih, g_width), px, py); gr_flip(); sleep(1);
 	}
+	res_free_surface(img);
 }
 
+void fill_circle(int x0, int y0, int radius)
+{
+	int x, y, r2, width, height;
+	width = gr_fb_width();
+	height = gr_fb_height();
+	r2 = radius * radius;
+	for (x = 0; x < width; x++) {
+		for (y = 0; y < height; y++) {
+			int dx = x - x0, dy = y - y0;
+			if (dx * dx + dy * dy <= r2) {
+				gr_fill(x, y, x+1, y+1);
+			}
+		}
+	}
+}
+
+void circle_test()
+{
+	int i, rmax, r, steps, dr;
+	puts("draw circle test");
+
+	steps = 20;
+	rmax = min(g_width/2, g_height/2);
+	r = dr = rmax / steps;
+	gr_color(0, 0, 0, 255); gr_clear();
+	for (i = 1; i <= 20; i++) {
+		gr_color(255, 0, 0, 255);
+		fill_circle(g_width/2, g_height/2, r);
+		gr_flip();
+		sleep(1);
+		printf("radius: %d\n", r);
+
+		r += dr;
+	}
+}
 
 int main(int argc, char** argv)
 {
@@ -96,6 +132,7 @@ int main(int argc, char** argv)
 	imname = (argc > 1) ? argv[1] : "error";
 	image_test(imname);
 
+	circle_test();
 
 	gr_exit();
 	return 0;
