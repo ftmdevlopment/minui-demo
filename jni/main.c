@@ -7,6 +7,8 @@
 int g_width = 0;
 int g_height = 0;
 
+int min(int x, int y) { return x < y ? x : y; }
+
 FILE *fout = NULL, *ferr = NULL;
 
 void color_test()
@@ -15,9 +17,9 @@ void color_test()
 	puts("\ndraw color test");
 	for (i = 0; i < 1; i++) {
 		gr_color(255, 255, 255, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // white
-		gr_color(255,   0,   0, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // blue
+		gr_color(255,   0,   0, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // red
 		gr_color(  0, 255,   0, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // green
-		gr_color(  0,   0, 255, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // red
+		gr_color(  0,   0, 255, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // blue
 		gr_color(  0,   0,   0, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // black
 		printf("flush color once!\n");
 	}
@@ -37,7 +39,7 @@ void text_test()
 
 		// white background
 		gr_color(255, 255, 255, 255);
-		gr_fill(0, 0, g_width, g_height);
+		gr_clear();
 
 		// black text
 		t_wid = gr_measure(text);
@@ -51,7 +53,7 @@ void text_test()
 
 void image_test(const char* name)
 {
-	int i, rc, iw, ih;
+	int i, rc, iw, ih, px, py;
 	gr_surface img = NULL;
 
 	puts("\ndraw image test");
@@ -61,8 +63,12 @@ void image_test(const char* name)
 	iw = gr_get_width(img);
 	ih = gr_get_height(img);
 	for (i = 0; i < 5; i++) {
-		gr_color(255, 255, 255, 255); gr_fill(0, 0, g_width, g_height); gr_flip(); sleep(1); // white
-		gr_blit(img, 0, 0, iw, ih, g_width/2 - iw/2, g_height/2 - ih/2); gr_flip(); sleep(1);
+		gr_color(255, 255, 255, 255); gr_clear(); gr_flip(); sleep(1); // white
+
+		gr_color(  0,   0,   0, 255); gr_clear();
+		px = g_width/2 - iw/2;  if (px < 0) px = 0;
+		py = g_height/2 - ih/2; if (py < 0) py = 0;
+		gr_blit(img, 0, 0, min(iw, g_width), min(ih, g_width), px, py); gr_flip(); sleep(1);
 	}
 }
 
@@ -70,7 +76,7 @@ void image_test(const char* name)
 int main(int argc, char** argv)
 {
 	int i = 0, fx = 0, fy = 0;
-       const char* imname;
+	const char* imname;
 
 	gr_init();
 
