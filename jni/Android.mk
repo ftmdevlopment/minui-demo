@@ -38,6 +38,26 @@ LOCAL_STATIC_LIBRARIES := \
 
 include $(BUILD_EXECUTABLE)
 
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := clockui
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE_TAGS := tests
+LOCAL_CFLAGS += -Wno-unused-parameter
+LOCAL_SRC_FILES := \
+    clock_ui.c \
+
+LOCAL_STATIC_LIBRARIES := \
+    libminui \
+    libpng \
+    libz \
+    libstdc++ \
+    libc
+
+include $(BUILD_EXECUTABLE)
+
+
 include $(LOCAL_PATH)/minui/Android.mk \
     $(LOCAL_PATH)/libpng/Android.mk \
     $(LOCAL_PATH)/zlib/Android.mk \
