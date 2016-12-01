@@ -22,17 +22,10 @@ TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := minui_test
-
+LOCAL_MODULE := mint
 LOCAL_FORCE_STATIC_EXECUTABLE := true
-
 LOCAL_MODULE_TAGS := tests
-
 LOCAL_CFLAGS += -Wno-unused-parameter
-
-LOCAL_C_INCLUDES := \
-    $(LOCAL_PATH)/minui \
-
 LOCAL_SRC_FILES := \
     main.c \
 

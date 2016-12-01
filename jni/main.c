@@ -1,8 +1,14 @@
 #include <unistd.h>
+#include <pthread.h>
+#include <linux/input.h>
 
 #include <stdio.h>
 
-#include <minui.h>
+#include "minui/minui.h"
+
+
+#define msleep(n) usleep((n)*1000)
+
 
 int g_width = 0;
 int g_height = 0;
@@ -94,27 +100,51 @@ void circle_test()
 	int i, rmax, r, steps, dr;
 	puts("draw circle test");
 
-	steps = 20;
+	steps = 100;
 	rmax = min(g_width/2, g_height/2);
 	r = dr = rmax / steps;
 	gr_color(0, 0, 0, 255); gr_clear();
-	for (i = 1; i <= 20; i++) {
+	for (i = 1; i <= steps; i++) {
 		gr_color(255, 0, 0, 255);
 		fill_circle(g_width/2, g_height/2, r);
 		gr_flip();
-		sleep(1);
-		printf("radius: %d\n", r);
-
+		msleep(20);
 		r += dr;
 	}
+}
+
+int event_callback(int fd, uint32_t epevents, void* data)
+{
+	struct input_event ev;
+	int ret;
+
+	ret = ev_get_input(fd, epevents, &ev);
+	if (ret) return -1;
+
+	gr_info("type: %x, code: %x, value: %x", ev.type, ev.code, ev.value);
+
+	return 0;
+}
+
+void* input_thread(void* args)
+{
+	for (;;) {
+		if (!ev_wait(-1)) {
+			ev_dispatch();
+		}
+	}
+	return NULL;
 }
 
 int main(int argc, char** argv)
 {
 	int i = 0, fx = 0, fy = 0;
-	const char* imname;
+	pthread_t input_reader;
 
 	gr_init();
+
+	ev_init(event_callback, NULL);
+	pthread_create(&input_reader, NULL, input_thread, NULL);
 
 	g_width = gr_fb_width();
 	g_height = gr_fb_height();
@@ -129,10 +159,11 @@ int main(int argc, char** argv)
 
 	text_test();
 
-	imname = (argc > 1) ? argv[1] : "error";
-	image_test(imname);
+	image_test((argc > 1) ? argv[1] : "error");
 
 	circle_test();
+	puts("wait for input_reader");
+	pthread_join(input_reader, NULL);
 
 	gr_exit();
 	return 0;
