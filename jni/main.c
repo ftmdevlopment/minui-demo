@@ -57,6 +57,31 @@ void text_test()
 	}
 }
 
+void alpha_color_test()
+{
+	int i, W, H;
+	int xa, xb, xc;
+	int ya, yb, yc;
+
+	puts(__func__);
+	W = gr_fb_width();
+	H = gr_fb_height();
+
+	// layout:
+	//      A    B
+	//      C    D
+	xa = xc = 0; xb = W/2;
+	ya = yb = 0; yc = H/2;
+	for (i = 255; i >= 0; i--) {
+		gr_color( 255, 255, 255, 255); gr_clear(); // white bg
+		gr_color( 255,   0,   0,   i); gr_fill( xa, ya, xa+W/2, ya+H/2);
+		gr_color(   0, 255,   0,   i); gr_fill( xb, yb, xb+W/2, yb+H/2);
+		gr_color(   0,   0, 255,   i); gr_fill( xc, yc, xc+W/2, yc+H/2);
+		gr_flip();
+		msleep(16);
+	}
+}
+
 void image_test(const char* name)
 {
 	int i, rc, iw, ih, px, py;
@@ -108,7 +133,7 @@ void circle_test()
 		gr_color(255, 0, 0, 255);
 		fill_circle(g_width/2, g_height/2, r);
 		gr_flip();
-		msleep(20);
+		msleep(10);
 		r += dr;
 	}
 }
@@ -157,11 +182,14 @@ int main(int argc, char** argv)
 
 	color_test();
 
+	circle_test();
+
+	alpha_color_test();
+
 	text_test();
 
 	image_test((argc > 1) ? argv[1] : "error");
 
-	circle_test();
 	puts("wait for input_reader");
 	pthread_join(input_reader, NULL);
 
